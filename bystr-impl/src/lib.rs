@@ -4,6 +4,9 @@
 //
 
 extern crate proc_macro;
+extern crate proc_macro2;
+use proc_macro2::{Span};
+
 extern crate proc_macro_hack;
 use proc_macro_hack::proc_macro_hack;
 
@@ -12,7 +15,7 @@ extern crate quote;
 
 use std::iter::FromIterator;
 
-fn stringify(input: &syn::parse::ParseStream) -> syn::parse::Result<(String, syn::export::Span)> {
+fn stringify(input: &syn::parse::ParseStream) -> syn::parse::Result<(String, Span)> {
     if input.peek(syn::LitStr) {
         let val: syn::LitStr = input.parse()?;
         Ok((val.value(), val.span()))
@@ -27,12 +30,12 @@ fn stringify(input: &syn::parse::ParseStream) -> syn::parse::Result<(String, syn
 struct StaticStr {
     len: usize,
     value: String,
-    span: syn::export::Span,
+    span: Span,
 }
 
 impl syn::parse::Parse for StaticStr {
     fn parse(input: syn::parse::ParseStream) -> syn::parse::Result<Self> {
-        let mut len: Option<(usize, syn::export::Span)> = None;
+        let mut len: Option<(usize, Span)> = None;
 
         // see if we have a length as first-arg
         if input.peek(syn::LitInt) {
@@ -69,7 +72,7 @@ impl syn::parse::Parse for StaticStr {
 }
 
 
-fn byte_to_expr(b: u8, span: syn::export::Span) -> syn::Expr {
+fn byte_to_expr(b: u8, span: Span) -> syn::Expr {
     let as_str = format!("{:#X}", b);
     syn::Expr::Lit(syn::ExprLit{
         attrs: vec!(),

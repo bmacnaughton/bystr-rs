@@ -11,6 +11,7 @@ repository = "https://github.com/zmarcantel/bystr-rs"
 proc-macro = true
 
 [dependencies]
+proc-macro2 = "1"
 syn = { version = "^1.0.8", features = ["full"] }
 quote = "^1.0.2"
 proc-macro-hack = "^0.5.11"
